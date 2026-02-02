@@ -14,3 +14,4 @@ def copyWithNoResult(): Unit \ IO + Exit =
         case Ok() => ()
         case Err(e) => println(e)
     }
+

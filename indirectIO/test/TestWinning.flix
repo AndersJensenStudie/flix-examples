@@ -1,5 +1,5 @@
 @Test
-def topRowAll1sMeans1Won(): Bool = 
+def topRowAll1sMeans1Won(): Unit \ Assert = 
     let won = region rc {
         let board = Array#{
             Array#{1, 1, 1} @ rc,
@@ -8,10 +8,10 @@ def topRowAll1sMeans1Won(): Bool =
         } @ rc;
         checkWinner(board)
     };
-    won == 1
+    Assert.assertEq(expected = 1, won)
 
 @Test
-def leftColumnAll1sMeans1Won(): Bool = 
+def leftColumnAll1sMeans1Won(): Unit \ Assert = 
     let won = region rc {
         let board = Array#{
             Array#{1, 0, 0} @ rc,
@@ -20,10 +20,10 @@ def leftColumnAll1sMeans1Won(): Bool =
         } @ rc;
         checkWinner(board)
     };
-    won == 1
+    Assert.assertEq(expected = 1, won)
 
 @Test
-def leftDiagonalAll2sMeans2Won(): Bool = 
+def leftDiagonalAll2sMeans2Won(): Unit \ Assert = 
     let won = region rc {
         let board = Array#{
             Array#{2, 0, 0} @ rc,
@@ -32,12 +32,12 @@ def leftDiagonalAll2sMeans2Won(): Bool =
         } @ rc;
         checkWinner(board)
     };
-    won == 2
+    Assert.assertEq(expected = 2, won)
 
 @Test 
-def initialBoardHasWinner0(): Bool = 
+def initialBoardHasWinner0(): Unit \ Assert = 
     region rc {
         let board = createBoard(rc);
         let winner = checkWinner(board);
-        winner == 0
+        Assert.assertEq(expected = 0, winner)
     }

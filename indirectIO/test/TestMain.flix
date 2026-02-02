@@ -1,5 +1,5 @@
 @Test 
-def printingAnEmptyBoardLooksCorrect(): Bool = 
+def printingAnEmptyBoardLooksCorrect(): Unit \ Assert = 
     region rc {
         let str = run {
                 let board = createBoard(rc);
@@ -12,11 +12,11 @@ def printingAnEmptyBoardLooksCorrect(): Bool =
             def eprintln(_msg, resume) = resume()
             def readln(resume) = resume("")
         };
-        "[000]\n[000]\n[000]\n" == str
+        Assert.assertEq(expected = "[000]\n[000]\n[000]\n", str)
     }
 
 @Test 
-def piece1CanBePlacedIn00(): Bool = 
+def piece1CanBePlacedIn00(): Unit \ Assert = 
     region rc {
         let str = run {
                 let board = createBoard(rc);
@@ -30,11 +30,11 @@ def piece1CanBePlacedIn00(): Bool =
             def eprintln(_msg, resume) = resume()
             def readln(resume) = resume("")
         };
-        "[100]\n[000]\n[000]\n" == str
+        Assert.assertEq(expected = "[100]\n[000]\n[000]\n", str)
     }
 
 @Test
-def piece2CannotBePlacedWherePiece1Is(): Bool = 
+def piece2CannotBePlacedWherePiece1Is(): Unit \ Assert = 
     region rc {
         let str = run {
                 let board = createBoard(rc);
@@ -49,11 +49,11 @@ def piece2CannotBePlacedWherePiece1Is(): Bool =
             def eprintln(_msg, resume) = resume()
             def readln(resume) = resume("")
         };
-        "[100]\n[000]\n[000]\n" == str
+        Assert.assertEq(expected = "[100]\n[000]\n[000]\n", str)
     }
 
 @Test
-def placeRandomPiecePlacesAPieceIn22(): Bool = 
+def placeRandomPiecePlacesAPieceIn22(): Unit \ Assert = 
     region rc {
         let str = run {
                 let board = createBoard(rc);
@@ -74,19 +74,19 @@ def placeRandomPiecePlacesAPieceIn22(): Bool =
             def randomGaussian(resume) = resume(0.0)
             def randomBool(resume) = resume(false)
         };
-        "[000]\n[000]\n[001]\n" == str
+        Assert.assertEq(expected = "[000]\n[000]\n[001]\n", str)
     }
 
 @Test 
-def correctlySee9FreeSpaces(): Bool = 
+def correctlySee9FreeSpaces(): Unit \ Assert = 
     let n = region rc {
         let board = createBoard(rc);
         amountOfFreeSpaces(board)
     };
-    n == 9
+    Assert.assertEq(expected = 9, n)
 
 @Test 
-def correctlySee5FreeSpaces(): Bool = 
+def correctlySee5FreeSpaces(): Unit \ Assert = 
     let n = region rc {
         let board = Array#{
             Array#{2, 0, 0} @ rc,
@@ -95,4 +95,4 @@ def correctlySee5FreeSpaces(): Bool =
         } @ rc;
         amountOfFreeSpaces(board)
     };
-    n == 5
+    Assert.assertEq(expected = 5, n)
