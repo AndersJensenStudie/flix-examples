@@ -1,4 +1,5 @@
 def copyWithNoResult(): Unit \ IO + Exit = 
+    // reads
     let result = run {
         let text = FileRead.read("copyme.txt");
         text
@@ -7,11 +8,11 @@ def copyWithNoResult(): Unit \ IO + Exit =
         case Ok(text) => text
         case Err(e) => println(e); Exit.exit(1)
     };
+    // write
     let writeResult = run {
-        FileWrite.write(str = text, "cope.txt")
+        FileWrite.append(str = text, "cope.txt")
     } with FileWrite.handle;
     match writeResult() {
         case Ok() => ()
         case Err(e) => println(e)
     }
-
