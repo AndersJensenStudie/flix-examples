@@ -1,0 +1,6 @@
+[package]
+name        = "chanceflix"
+description = "Port of Chance.js to Flix using algebraic effects"
+version     = "0.1.0"
+flix        = "0.69.3"
+authors     = ["John Doe <john@example.com>"]

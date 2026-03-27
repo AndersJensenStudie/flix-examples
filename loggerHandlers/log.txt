@@ -1,1 +1,2 @@
-[Fatal]: Testing a simple string
+[Fatal] I dont like this
+[Fatal] Test

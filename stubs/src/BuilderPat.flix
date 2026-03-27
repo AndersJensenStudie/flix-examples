@@ -1,5 +1,6 @@
 mod RandomHandlerBuilder {
     type alias B = {b = Option[Bool], i32 = Option[Int32]}
+    type alias C[a: Type, b: Type, ef: Eff] = a -> b \ ef
 
     pub def createBuilder(): B = 
         {

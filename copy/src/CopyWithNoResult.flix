@@ -1,4 +1,4 @@
-def copyWithNoResult(): Unit \ IO + Exit = 
+def copyWithNoResult(): Unit \ IO + Sys.Exit = 
     // reads
     let result = run {
         let text = FileRead.read("copyme.txt");
@@ -6,7 +6,7 @@ def copyWithNoResult(): Unit \ IO + Exit =
     } with FileRead.handle;
     let text = match result() {
         case Ok(text) => text
-        case Err(e) => println(e); Exit.exit(1)
+        case Err(e) => println(e); Sys.Exit.exit(1)
     };
     // write
     let writeResult = run {

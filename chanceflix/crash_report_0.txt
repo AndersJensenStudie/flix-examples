@@ -1,0 +1,47 @@
+#
+# An unexpected error has been detected by the Flix compiler:
+#
+#   key not found: RandomPhone.handleDk
+#
+# This is a bug in the Flix compiler. Please report it here:
+#
+# https://github.com/flix/flix/issues
+#
+# -- Flix Compiler --
+#
+# Flix Version : 0.69.3
+#   incremental: All
+#
+# -- Java Virtual Machine --
+#
+# JVM Version  : 25.0.2 (2026-01-20)
+# JVM Vendor   : Arch Linux
+# JAVA_HOME    : /usr/lib/jvm/java-25-openjdk
+# System       : Linux (6.19.6-arch1-1)
+#
+# -- Stack Trace --
+java.util.NoSuchElementException: key not found: RandomPhone.handleDk
+	at scala.collection.immutable.BitmapIndexedMapNode.apply(HashMap.scala:674)
+	at scala.collection.immutable.BitmapIndexedMapNode.apply(HashMap.scala:672)
+	at scala.collection.immutable.BitmapIndexedMapNode.apply(HashMap.scala:672)
+	at scala.collection.immutable.HashMap.apply(HashMap.scala:132)
+	at ca.uwaterloo.flix.language.phase.extra.CodeHinter$.lazyWhenPure(CodeHinter.scala:204)
+	at ca.uwaterloo.flix.language.phase.extra.CodeHinter$.checkEffect(CodeHinter.scala:184)
+	at ca.uwaterloo.flix.language.phase.extra.CodeHinter$.$anonfun$visitApplyDef$1(CodeHinter.scala:54)
+	at scala.collection.immutable.List.flatMap(List.scala:283)
+	at ca.uwaterloo.flix.language.phase.extra.CodeHinter$.visitApplyDef(CodeHinter.scala:54)
+	at ca.uwaterloo.flix.language.phase.extra.CodeHinter$.$anonfun$run$1(CodeHinter.scala:35)
+	at scala.collection.immutable.List.flatMap(List.scala:283)
+	at ca.uwaterloo.flix.language.phase.extra.CodeHinter$.run(CodeHinter.scala:35)
+	at ca.uwaterloo.flix.api.lsp.VSCodeLspServer.processSuccessfulCheck(VSCodeLspServer.scala:394)
+	at ca.uwaterloo.flix.api.lsp.VSCodeLspServer.processCheck(VSCodeLspServer.scala:358)
+	at ca.uwaterloo.flix.api.lsp.VSCodeLspServer.processRequest(VSCodeLspServer.scala:268)
+	at ca.uwaterloo.flix.api.lsp.VSCodeLspServer.onMessage(VSCodeLspServer.scala:126)
+	at org.java_websocket.server.WebSocketServer.onWebsocketMessage(WebSocketServer.java:763)
+	at org.java_websocket.drafts.Draft_6455.processFrameText(Draft_6455.java:986)
+	at org.java_websocket.drafts.Draft_6455.processFrame(Draft_6455.java:910)
+	at org.java_websocket.WebSocketImpl.decodeFrames(WebSocketImpl.java:397)
+	at org.java_websocket.WebSocketImpl.decode(WebSocketImpl.java:229)
+	at org.java_websocket.server.WebSocketServer$WebSocketWorker.doDecode(WebSocketServer.java:1165)
+	at org.java_websocket.server.WebSocketServer$WebSocketWorker.run(WebSocketServer.java:1137)
+

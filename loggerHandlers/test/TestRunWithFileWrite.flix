@@ -1,31 +1,38 @@
-def test02(): Unit \ IO = 
-    let m = RichString.text("Testing a simple string");
-    let s = Severity.Fatal;
-    let res = run {
-        Logger.log(s, m)
-    } with runWithFileWrite("log")
-    with handler FileWrite {
-        def write(data, f, k) = ???
-        def writeLines(data, f, k) = ???
-        def writeBytes(data, f, k) = ???
-        def append(dat, f, k) = {
-            println("Writing " + dat#str + " to " + f);
-            k()
-        }
-        def appendLines(data, f, k) = ???
-        def appendBytes(data, f, k) = ???
-        def truncate(f, k) = ???
-        def mkDir(d, k) = ???
-        def mkDirs(d, k) = ???
-        def mkTempDir(prefix, k) = ???
-    };
-    ()
+@Test
+def testJson01(): Unit \ IO = 
+    run {
+        Logger.fatal("Hello world")
+    } with Logger_.runWithJSON(List#{})
+    with Logger.runWithIO
 
-def test03(): Unit \ IO = 
-    let m = RichString.text("Testing a simple string");
-    let s = Severity.Fatal;
-    let res = run {
-        Logger.log(s, m)
-    } with runWithFileWrite("log.txt")
-    with FileWrite.runWithIO;
-    println(res)
+@Test
+def testJson02(): Unit \ IO + Time.Clock = 
+    let timeLog = (() -> (RichString.text("${Time.Clock.currentTime(Time.TimeUnit.Seconds)}"), RichString.text("time")));
+    run {
+        Logger.fatal("Hello world")
+    } with Logger_.runWithJSON(List#{timeLog})
+    with Logger.runWithIO
+    
+@Test
+def testJson03(): Unit \ IO + Time.Clock = 
+    let timeLog = (() -> (RichString.text("${Time.Clock.currentTime(Time.TimeUnit.Seconds)}"), RichString.text("time")));
+    let twolog = (() -> (RichString.text("${2}"), RichString.text("data")));
+    let l = Logger_.fnCons(timeLog, List#{twolog});
+    run {
+        Logger.fatal("Hello world")
+    } with Logger_.runWithJSON(l)
+    with Logger.runWithIO
+
+@Test
+def testEmoji01(): Unit \ IO = 
+    run {
+        Logger.fatal("Oh no");
+        Logger.debug("A bug!")
+    } with Logger_.runWithEmoji
+    with Logger.runWithIO
+
+@Test
+def testLoss01(): Unit \ IO = 
+    run {
+        Logger.fatal("Oh no")
+    } with Logger_.runWithLoss

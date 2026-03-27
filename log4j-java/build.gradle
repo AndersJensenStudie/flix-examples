@@ -1,0 +1,22 @@
+plugins {
+    // This tells Gradle: "Hey, I'm a Java project!"
+    id 'java'
+    // This allows you to run the app via 'gradle run'
+    id 'application' 
+}
+
+repositories {
+    // This tells Gradle where to download Log4j2 from
+    mavenCentral()
+}
+
+dependencies {
+    // Now 'implementation' will work!
+    implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+}
+
+application {
+    // Define the main class so 'gradle run' knows where to start
+    mainClass = 'my.log4j.app.App' 
+}

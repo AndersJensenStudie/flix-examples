@@ -48,3 +48,4 @@ pub def handle(f: a -> b \ ef): a -> b \ (ef - Random) + {IO} =
         }
     };
     k
+

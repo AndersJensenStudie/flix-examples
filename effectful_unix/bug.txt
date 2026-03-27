@@ -1,0 +1,42 @@
+#
+# An unexpected error has been detected by the Flix compiler:
+#
+#   Cannot find 'm_test01' method of 'Root$'. (unknown:1:1)
+#
+# This is a bug in the Flix compiler. Please report it here:
+#
+# https://github.com/flix/flix/issues
+#
+# -- Flix Compiler --
+#
+# Flix Version : 0.68.0
+#   incremental: All
+#
+# -- Java Virtual Machine --
+#
+# JVM Version  : 25.0.2 (2026-01-20)
+# JVM Vendor   : Arch Linux
+# JAVA_HOME    : /usr/lib/jvm/java-25-openjdk
+# System       : Linux (6.18.7-arch1-1)
+#
+# -- Stack Trace --
+ca.uwaterloo.flix.util.InternalCompilerException: Cannot find 'm_test01' method of 'Root$'. (unknown:1:1)
+	at ca.uwaterloo.flix.language.phase.jvm.JvmLoader$.$anonfun$loadMethod$2(JvmLoader.scala:112)
+	at scala.Option.getOrElse(Option.scala:201)
+	at ca.uwaterloo.flix.language.phase.jvm.JvmLoader$.loadMethod(JvmLoader.scala:112)
+	at ca.uwaterloo.flix.language.phase.jvm.JvmLoader$.$anonfun$load$1(JvmLoader.scala:80)
+	at ca.uwaterloo.flix.util.collection.MapOps$.$anonfun$mapValuesWithKey$1(MapOps.scala:36)
+	at scala.collection.StrictOptimizedMapOps.map(StrictOptimizedMapOps.scala:28)
+	at scala.collection.StrictOptimizedMapOps.map$(StrictOptimizedMapOps.scala:27)
+	at scala.collection.immutable.HashMap.map(HashMap.scala:39)
+	at ca.uwaterloo.flix.language.phase.jvm.JvmLoader$.load(JvmLoader.scala:79)
+	at ca.uwaterloo.flix.language.phase.jvm.JvmLoader$.run(JvmLoader.scala:45)
+	at ca.uwaterloo.flix.api.Flix.codeGen(Flix.scala:631)
+	at ca.uwaterloo.flix.runtime.shell.Shell.compile(Shell.scala:395)
+	at ca.uwaterloo.flix.runtime.shell.Shell.execReload(Shell.scala:203)
+	at ca.uwaterloo.flix.runtime.shell.Shell.execReloadAndEval(Shell.scala:355)
+	at ca.uwaterloo.flix.runtime.shell.Shell.execute(Shell.scala:176)
+	at ca.uwaterloo.flix.runtime.shell.Shell.loop(Shell.scala:124)
+	at ca.uwaterloo.flix.Main$.main(Main.scala:350)
+	at ca.uwaterloo.flix.Main.main(Main.scala)
+

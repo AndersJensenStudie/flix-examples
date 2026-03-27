@@ -1,0 +1,6 @@
+[package]
+name        = "random_stubs"
+description = "test"
+version     = "0.1.0"
+flix        = "0.69.2"
+authors     = ["John Doe <john@example.com>"]
