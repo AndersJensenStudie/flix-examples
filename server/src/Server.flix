@@ -2,14 +2,14 @@ mod Server {
     use Net.{TcpAccept, TcpServer, TcpSocket, Ipv4Addr, IpAddr, TcpBind}
     use Fs.FileRead
 
-    pub def connect(ip: IpAddr, port: Int16): TcpServer \ Abort + TcpBind + Logger = 
+    pub def connect(ip: IpAddr, port: Int16): TcpServer \ {Abort, TcpBind, Logger} = 
         let sRes = TcpBind.bind(ip, port);
         match sRes {
             case Err(e) => Abort.abort(RichString.text("Something went wrong while connecting to ${ip}:${port}: ${e}"))
             case Ok(s) => Logger.info("Succesfully connected to ${ip}:${port}"); s
         }
 
-    pub def serveWithRoutes(s: TcpServer, prefix: String, routes: Map[String, String]): Unit \ {IO, TcpAccept, Abort, FileRead, Logger} = 
+    pub def serve(s: TcpServer, prefix: String): Unit \ {IO, TcpAccept, Abort, FileRead, Logger, RouteResolver} = 
         let conRes = TcpAccept.accept(s);
         let socket = match conRes {
             case Err(e) => Abort.abort(RichString.text("Something went wrong while accepting connection: ${e}"))
@@ -21,14 +21,9 @@ mod Server {
         //Logger.debug("Got request with headers: ${headers}"); // works weird for some reason??
         Map.forEach(k -> v -> Logger.trace("[HEADER] ${k} => ${v}"), headers);
         let route = "${Option.getOrAbort(Map.get("route", headers))}";
-        Logger.trace("Route: ${route}");
-        let file = Option.getWithDefault(route, Map.get(route, routes));
-        Logger.trace("File: ${file}");
+        let file = RouteResolver.getRoute(route);
         send(socket, "${prefix}${file}");
-        serveWithRoutes(s, prefix, routes)
-
-    pub def serve(s: TcpServer, prefix: String): Unit \ {IO, TcpAccept, Abort, FileRead, Logger} = 
-        serveWithRoutes(s, prefix, Map.insert("/", "/index.html", Map.empty()))
+        serve(s, prefix)
 
     def send(socket: TcpSocket, file: String): Unit \ {FileRead, IO, Abort, Logger} = 
         region rc {
@@ -72,6 +67,7 @@ mod Server {
         List.foldLeft(m -> s -> Map.insert(fst(s), snd(s), m), Map.empty())
 
     def findExtension(s: String): ContentType = 
+        @Tailrec
         def rec(ls: List[String]): String = {
             match ls {
                 case ext :: Nil => ext
