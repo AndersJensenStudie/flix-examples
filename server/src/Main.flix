@@ -18,7 +18,8 @@ def withRoutes(): Unit \ IO =
     run {
         let s = connect(IpAddr.V4(Ipv4Addr.localhost()), 4000i16);
         let r = Map.insert("/", "/index.html", Map.empty()) |> 
-        Map.insert("/helloworld", "/index.html");
+        Map.insert("/helloworld", "/index.html") |> 
+        Map.insert("/favicon.ico", "/images/favicon.ico");
         serveWithRoutes(s, "resources", r)
     } with Abort.runWithIO
     with FileRead.runWithIO

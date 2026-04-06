@@ -5,29 +5,32 @@ mod Server {
     pub def connect(ip: IpAddr, port: Int16): TcpServer \ Abort + TcpBind + Logger = 
         let sRes = TcpBind.bind(ip, port);
         match sRes {
-            case Err(e) => Abort.abort(RichString.text("Something went while connecting to ${ip}:${port}: ${e}"))
+            case Err(e) => Abort.abort(RichString.text("Something went wrong while connecting to ${ip}:${port}: ${e}"))
             case Ok(s) => Logger.info("Succesfully connected to ${ip}:${port}"); s
         }
 
     pub def serveWithRoutes(s: TcpServer, prefix: String, routes: Map[String, String]): Unit \ {IO, TcpAccept, Abort, FileRead, Logger} = 
         let conRes = TcpAccept.accept(s);
         let socket = match conRes {
-            case Err(e) => Abort.abort(RichString.text("Something went while accepting connection: ${e}"))
+            case Err(e) => Abort.abort(RichString.text("Something went wrong while accepting connection: ${e}"))
             case Ok(t) => t
         };
         let req = read(socket);
         Logger.trace(req);
         let headers = parseRequest(req);
-        Logger.debug("Got request with headers: ${headers}");
+        //Logger.debug("Got request with headers: ${headers}"); // works weird for some reason??
+        Map.forEach(k -> v -> Logger.trace("[HEADER] ${k} => ${v}"), headers);
         let route = "${Option.getOrAbort(Map.get("route", headers))}";
+        Logger.trace("Route: ${route}");
         let file = Option.getWithDefault(route, Map.get(route, routes));
+        Logger.trace("File: ${file}");
         send(socket, "${prefix}${file}");
         serveWithRoutes(s, prefix, routes)
 
     pub def serve(s: TcpServer, prefix: String): Unit \ {IO, TcpAccept, Abort, FileRead, Logger} = 
         serveWithRoutes(s, prefix, Map.insert("/", "/index.html", Map.empty()))
 
-    def send(socket: TcpSocket, file: String): Unit \ FileRead + IO + Abort + Logger = 
+    def send(socket: TcpSocket, file: String): Unit \ {FileRead, IO, Abort, Logger} = 
         region rc {
             Logger.debug("Reading file: ${file}");
             let readRes = FileRead.readBytes(file);
@@ -45,7 +48,7 @@ mod Server {
             Logger.debug("Sent ${file}")
         }
 
-    def read(socket: TcpSocket): String \ IO + Abort + Logger = 
+    def _read(socket: TcpSocket): String \ {IO, Abort, Logger} = 
         region rc {
             let buf = Array.empty(rc, 2048);
             Logger.debug("Reading from buffer");
@@ -53,11 +56,17 @@ mod Server {
             let readArr = Array.slice(rc, start = 0, end = readK + 1, buf);
             String.fromBytes(Array.toVector(readArr))
         }
+
+    pub def read(socket: TcpSocket): String \ {IO, Abort, Logger} = 
+        region rc {
+            Logger.debug("Reading from buffer");
+            let reader = BufReader.withCapacity(rc, 2048, socket);
+            let res = Result.getOrAbort(Peekable.readWhile(c -> c != 10i8, reader));
+            String.fromBytes(res)
+        }
         
-    def parseRequest(req: String): Map[String, String] \ Abort =
-        String.splitOn(substr = "\n", req) |>
-        List.head |>
-        Option.getOrAbort |> 
+    def parseRequest(req: String): Map[String, String] \ {} =
+        req |>
         String.splitOn(substr = " ") |> 
         List.zip(List#{"request_type", "route", "http_version"}) |> 
         List.foldLeft(m -> s -> Map.insert(fst(s), snd(s), m), Map.empty())
@@ -76,6 +85,7 @@ mod Server {
             case "html" => ContentType.HTML
             case "css" => ContentType.CSS
             case "ico" => ContentType.ICO
+            case "png" => ContentType.PNG
             case _ => ContentType.HTML
         }
 
@@ -94,6 +104,7 @@ mod Server {
         case HTML
         case CSS
         case ICO
+        case PNG
     }
 
     instance ToString[ContentType] {
@@ -103,6 +114,7 @@ mod Server {
                 case ContentType.HTML => "text/html"
                 case ContentType.CSS => "text/css"
                 case ContentType.ICO => "image/x-icon"
+                case ContentType.PNG => "image/png"
             }
     
     }
